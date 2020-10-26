@@ -1,3 +1,4 @@
+" https://gist.github.com/kien/1573031/6726d676addc38e811ae572ef09d56c75803834e
 " =============================================================================
 " File:          autoload/ctrlp/oldfiles.vim
 " Description:   Find files saved in viminfo: jumplist, changelist, marks ...
@@ -12,17 +13,28 @@
 "}}}
 
 " Init {{{1
+if !has('viminfo')
+	fini
+en
 if ( exists('g:loaded_ctrlp_oldfiles') && g:loaded_ctrlp_oldfiles )
-	\ || !has('viminfo')
 	fini
 en
 let g:loaded_ctrlp_oldfiles = 1
 
-let s:oldfiles_var = ['ctrlp#oldfiles#init()', 'ctrlp#oldfiles#accept',
-	\ 'oldfiles', 'olf']
+let s:oldfiles_var = {
+			\ 'init'  : 'ctrlp#oldfiles#init()',
+			\ 'accept': 'ctrlp#oldfiles#accept',
+			\ 'lname' : 'oldfiles',
+			\ 'sname' : 'olf',
+			\ 'sort'  : 0,
+			\ 'nolim' : 1,
+			\ }
 
-let g:ctrlp_ext_vars = exists('g:ctrlp_ext_vars') && !empty(g:ctrlp_ext_vars)
-	\ ? add(g:ctrlp_ext_vars, s:oldfiles_var) : [s:oldfiles_var]
+if exists('g:ctrlp_ext_vars') && !empty(g:ctrlp_ext_vars)
+	let g:ctrlp_ext_vars = add(g:ctrlp_ext_vars, s:oldfiles_var)
+el
+	let g:ctrlp_ext_vars = [s:oldfiles_var]
+en
 
 let s:id = g:ctrlp_builtins + len(g:ctrlp_ext_vars)
 " Public {{{1
