@@ -5,18 +5,19 @@
 " Author:        Kien Nguyen <github.com/kien>
 " =============================================================================
 
-" User Configuration {{{1
+" User Configuration {{{
 " Enable:
 "        let g:ctrlp_extensions += ['oldfiles']
 " Create A Command:
 "        com! CtrlPOF cal ctrlp#init(ctrlp#oldfiles#id())
 "}}}
 
-" Init {{{1
-if !has('viminfo')
+" Init {{{
+
+if !has('viminfo') && !has('nvim')
 	fini
 en
-if ( exists('g:loaded_ctrlp_oldfiles') && g:loaded_ctrlp_oldfiles )
+if exists('g:loaded_ctrlp_oldfiles') && g:loaded_ctrlp_oldfiles
 	fini
 en
 let g:loaded_ctrlp_oldfiles = 1
@@ -25,7 +26,7 @@ let s:oldfiles_var = {
 			\ 'init'  : 'ctrlp#oldfiles#init()',
 			\ 'accept': 'ctrlp#oldfiles#accept',
 			\ 'lname' : 'oldfiles',
-			\ 'sname' : 'olf',
+			\ 'sname' : 'oldf',
 			\ 'sort'  : 0,
 			\ 'nolim' : 1,
 			\ }
@@ -37,18 +38,20 @@ el
 en
 
 let s:id = g:ctrlp_builtins + len(g:ctrlp_ext_vars)
-" Public {{{1
-fu! ctrlp#oldfiles#init()
+
+" }}}
+" Public {{{
+
+function! ctrlp#oldfiles#init() abort
 	retu filter(map(copy(v:oldfiles), 'expand(v:val)'), 'filereadable(v:val)')
-endf
+endfunction
 
-fu! ctrlp#oldfiles#accept(mode, str)
+function! ctrlp#oldfiles#accept(mode, str) abort
 	cal ctrlp#acceptfile(a:mode, a:str)
-endf
+endfunction
 
-fu! ctrlp#oldfiles#id()
+function! ctrlp#oldfiles#id() abort
 	retu s:id
-endf
-"}}}
+endfunction
 
-" vim:fen:fdm=marker:fmr={{{,}}}:fdl=0:fdc=1:ts=2:sw=2:sts=2
+" }}}
